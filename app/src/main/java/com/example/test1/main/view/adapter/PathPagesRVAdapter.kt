@@ -28,6 +28,7 @@ class PathPagesRVAdapter : RecyclerView.Adapter<PathPagesRVAdapter.ViewHolder>()
         mContext = parent.context
         val binding =
             PathPageItemBinding.inflate(LayoutInflater.from(mContext), parent, false)
+        binding.root.layoutParams.width = parent.width / 2
         return ViewHolder(binding)
     }
 
