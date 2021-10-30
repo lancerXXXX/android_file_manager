@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".main.view.MainActivity">
 
+    <com.example.test1.common.CommonTitleBar
+        android:id="@+id/title_bar"
+        style="@style/Widget.Theme.Test1.MyView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:exampleDimension="24sp"
+        app:exampleDrawable="@android:drawable/ic_menu_add"
+        app:exampleString="Hello, CommonTitleBar" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_header_container"
         android:layout_width="0dp"
@@ -13,7 +25,8 @@
         android:background="#FFA07A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/title_bar"
+        >
 
         <TextView
             android:layout_width="wrap_content"

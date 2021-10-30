@@ -4645,3 +4645,27 @@ java.lang.IllegalArgumentException: This model returns 4 elements in the pixel a
 2021-10-24 22:34:43,497 [1973435]   WARN - itors.literals.LiteralsManager - Only Kotlin is supported for LiveLiterals 
 2021-10-24 22:34:43,499 [1973437]   WARN - itors.literals.LiteralsManager - Only Kotlin is supported for LiveLiterals 
 2021-10-24 22:34:43,502 [1973440]   WARN - itors.literals.LiteralsManager - Only Kotlin is supported for LiveLiterals 
+2021-10-24 22:48:07,647 [2777585]   WARN - ea.logcat.AndroidLogcatService - Connection reset by peer 
+java.io.IOException: Connection reset by peer
+	at java.base/sun.nio.ch.FileDispatcherImpl.read0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:39)
+	at java.base/sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:276)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:245)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:223)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:358)
+	at com.android.ddmlib.AdbHelper.read(AdbHelper.java:1067)
+	at com.android.ddmlib.AdbHelper.read(AdbHelper.java:1043)
+	at com.android.ddmlib.AdbHelper.readAdbResponse(AdbHelper.java:312)
+	at com.android.ddmlib.AdbHelper.setDevice(AdbHelper.java:1172)
+	at com.android.ddmlib.AdbHelper.setDevice(AdbHelper.java:1193)
+	at com.android.ddmlib.AdbHelper.executeRemoteCommand(AdbHelper.java:602)
+	at com.android.ddmlib.AdbHelper.executeRemoteCommand(AdbHelper.java:470)
+	at com.android.ddmlib.internal.DeviceImpl.executeShellCommand(DeviceImpl.java:708)
+	at com.android.tools.idea.logcat.AndroidLogcatService.supportsEpochFormatModifier(AndroidLogcatService.java:268)
+	at com.android.tools.idea.logcat.AndroidLogcatService.executeLogcat(AndroidLogcatService.java:255)
+	at com.android.tools.idea.logcat.AndroidLogcatService.lambda$startReceiving$0(AndroidLogcatService.java:229)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
