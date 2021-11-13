@@ -21,39 +21,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val context = getApplication<Application>().applicationContext
 
     init {
-        fun mockData(): MutableList<PathPageItem> {
-            val tempPathItems1 = mutableListOf<PathItem>().apply {
-                add(PathItem("path1-1", ""))
-                add(PathItem("path1-1", ""))
-                add(PathItem("path1-3", ""))
-                add(PathItem("path1-4", ""))
-            }
-
-            val tempPathItems2 = mutableListOf<PathItem>().apply {
-                add(PathItem("path2-1", ""))
-                add(PathItem("path2-2", ""))
-                add(PathItem("path2-3", ""))
-                add(PathItem("path2-4", ""))
-            }
-
-            val tempPathPageItem1 = PathPageItem(tempPathItems1)
-            val tempPathPageItem2 = PathPageItem(tempPathItems2)
-
-            val tempPathPageItems = mutableListOf<PathPageItem>().apply {
-                add(tempPathPageItem1)
-                add(tempPathPageItem2)
-            }
-
-            return tempPathPageItems
-        }
-
         _dataSetInner.apply {
             clear()
             add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(initFirstPathPage())))
             _dataSet.value = this
-            refreshData()
         }
-
+        refreshData()
     }
 
     private fun refreshData() {
@@ -73,12 +46,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addPathPage2WhichPage(path: String, clickFromPage: Int) {
+    fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
         val parentFile = File(path)
         simpleLog("addPathPage2WhichPage - ${path ?: "path is null"}")
-        val nextPagePaths = _repository.getPathListByFile(parentFile).apply {
-            simpleLog(toString())
-        }
+        val nextPagePaths = _repository.getPathListByFile(parentFile)
         _dataSetInner.apply {
             slice(0..clickFromPage).let {
                 this.clear()

@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test1.databinding.PathItemBinding
 import com.example.test1.main.model.PathItem
 
-class PathRVAdapter : RecyclerView.Adapter<PathRVAdapter.ViewHolder>() {
+// One Page
+class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
 
     private val dataSet: MutableList<PathItem> = mutableListOf()
     private lateinit var itemClickListener: OnItemClickListener

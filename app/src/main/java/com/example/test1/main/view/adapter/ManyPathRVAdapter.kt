@@ -10,11 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test1.databinding.PathPageItemBinding
 import com.example.test1.main.model.PathPageItem
 
-class PathPagesRVAdapter : RecyclerView.Adapter<PathPagesRVAdapter.ViewHolder>() {
+// Many Pages
+class ManyPathRVAdapter : RecyclerView.Adapter<ManyPathRVAdapter.ViewHolder>() {
 
     private val dataSet: MutableList<PathPageItem> = mutableListOf()
     private lateinit var mContext: Context
-    private lateinit var mClickListener: PathPagesRVAdapter.OnItemClickListener
+    private lateinit var mClickListener: ManyPathRVAdapter.OnItemClickListener
 
     inner class ViewHolder(val binding: PathPageItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -43,9 +44,9 @@ class PathPagesRVAdapter : RecyclerView.Adapter<PathPagesRVAdapter.ViewHolder>()
         }
 
         fun setupAdapter() {
-            val pathRVAdapter = PathRVAdapter()
+            val pathRVAdapter = OnePageRVAdapter()
             val whichPage = position
-            pathRVAdapter.setOnItemClickListener(object : PathRVAdapter.OnItemClickListener {
+            pathRVAdapter.setOnItemClickListener(object : OnePageRVAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, position: Int) {
                     // the item which be clicked
                     dataSet[holder.adapterPosition].pathItems[position].filePath.let {
@@ -58,12 +59,17 @@ class PathPagesRVAdapter : RecyclerView.Adapter<PathPagesRVAdapter.ViewHolder>()
         }
 
         fun setupDataSet() {
-            (holder.binding.pathRV.adapter as PathRVAdapter).setDataSet(dataSet[position].pathItems)
+            (holder.binding.pathRV.adapter as OnePageRVAdapter).setDataSet(dataSet[position].pathItems)
         }
 
-        setupLayoutManager()
-        setupAdapter()
-        setupDataSet()
+        fun  setupOnePage() {
+            setupLayoutManager()
+            setupAdapter()
+            setupDataSet()
+        }
+
+        setupOnePage()
+
     }
 
     override fun getItemCount(): Int {
@@ -78,7 +84,7 @@ class PathPagesRVAdapter : RecyclerView.Adapter<PathPagesRVAdapter.ViewHolder>()
     fun notifyPathRVDataSetChanged() {
     }
 
-    fun setOnItemClickListener(clickListener: PathPagesRVAdapter.OnItemClickListener) {
+    fun setOnItemClickListener(clickListener: ManyPathRVAdapter.OnItemClickListener) {
         this.mClickListener = clickListener
     }
 

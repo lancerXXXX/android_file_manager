@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test1.base.view.BaseActivity
 import com.example.test1.base.viewmodel.ViewModelFactory
 import com.example.test1.databinding.ActivityMainBinding
-import com.example.test1.main.view.adapter.PathPagesRVAdapter
+import com.example.test1.main.view.adapter.ManyPathRVAdapter
 
 class MainActivity : BaseActivity() {
 
@@ -38,11 +38,14 @@ class MainActivity : BaseActivity() {
             }
 
             fun setUpAdapter() {
-                val pathPagesRVAdapter = PathPagesRVAdapter()
+                val pathPagesRVAdapter = ManyPathRVAdapter()
                 pathPagesRVAdapter.setOnItemClickListener(object :
-                    PathPagesRVAdapter.OnItemClickListener {
+                    ManyPathRVAdapter.OnItemClickListener {
                     override fun onItemClick(clickedPathName: String, clickFromPageNum: Int) {
-                        mainViewModel.addPathPage2WhichPage(clickedPathName, clickFromPageNum)
+                        mainViewModel.addOnePage2SpecificPage(clickedPathName, clickFromPageNum)
+                        binding.pathPageRV.apply {
+                            smoothScrollToPosition((adapter?.itemCount ?: 1))
+                        }
                     }
                 })
                 binding.pathPageRV.adapter = pathPagesRVAdapter
@@ -50,8 +53,8 @@ class MainActivity : BaseActivity() {
 
             fun setUpDataObserve() {
                 mainViewModel.dataSet.observe(this, {
-                    (binding.pathPageRV.adapter as PathPagesRVAdapter).setUpDataSet(it)
-                    (binding.pathPageRV.adapter as PathPagesRVAdapter)?.notifyPathRVDataSetChanged()
+                    (binding.pathPageRV.adapter as ManyPathRVAdapter).setUpDataSet(it)
+                    (binding.pathPageRV.adapter as ManyPathRVAdapter)?.notifyPathRVDataSetChanged()
                     binding.pathPageRV.adapter?.notifyDataSetChanged()
                 })
             }
