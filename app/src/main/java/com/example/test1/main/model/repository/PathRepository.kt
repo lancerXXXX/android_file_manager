@@ -7,15 +7,16 @@ import java.io.FilenameFilter
 
 class PathRepository {
 
-
     fun getPathListByFile(file: File): List<File> {
-        val files = file.listFiles(object : FilenameFilter {
-            override fun accept(p0: File?, p1: String?): Boolean {
-                return true
-            }
+        val files = file.listFiles(
+//            object : FilenameFilter {
+//            override fun accept(p0: File?, p1: String?): Boolean {
+//                return true
+//            }
 
-        }).also {
-            simpleLog(it.toString())
+//        }
+    ).also {
+            simpleLog(it.size)
         }
         return files.toList()
     }

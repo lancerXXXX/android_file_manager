@@ -8,6 +8,10 @@ import com.example.test1.base.view.BaseActivity
 import com.example.test1.base.viewmodel.ViewModelFactory
 import com.example.test1.databinding.ActivityMainBinding
 import com.example.test1.main.view.adapter.ManyPageRVAdapter
+import com.example.test1.utils.extension.PermissionUtils
+import android.widget.Toast
+import android.os.Environment
+import android.content.pm.PackageManager
 
 class MainActivity : BaseActivity() {
 
@@ -18,7 +22,32 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        PermissionUtils.isGrantExternalRW(this, 1)
         initMVVM()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            1 -> if (grantResults[0] === PackageManager.PERMISSION_GRANTED) {
+                val sdCard = Environment.getExternalStorageState()
+                if (sdCard == Environment.MEDIA_MOUNTED) {
+                    Toast.makeText(this, "Have gotten storage permission", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "You cannot see files if you don't allow storage permission",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun initMVVM() {
