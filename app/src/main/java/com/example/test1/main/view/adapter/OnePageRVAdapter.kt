@@ -10,6 +10,10 @@ import com.example.test1.databinding.FileItemBinding
 import com.example.test1.databinding.FolderItemBinding
 import com.example.test1.main.model.FileItem
 import com.example.test1.main.model.FolderItem
+import android.view.animation.AlphaAnimation
+
+
+
 
 // One Page
 class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
@@ -75,6 +79,12 @@ class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
             is FileItem -> DIRECTORY_TYPE_FILE
             else -> DIRECTORY_TYPE_FILE
         }
+    }
+
+    fun setFadeAnimation(view: View) {
+        val anim = AlphaAnimation(0.0f, 1.0f)
+        anim.duration = 500
+        view.startAnimation(anim)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {

@@ -12,6 +12,9 @@ import com.example.test1.utils.extension.PermissionUtils
 import android.widget.Toast
 import android.os.Environment
 import android.content.pm.PackageManager
+import android.util.DisplayMetrics
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : BaseActivity() {
 
@@ -60,9 +63,29 @@ class MainActivity : BaseActivity() {
         fun setupViewModel() {
 
             fun setUpLayoutManager() {
-                binding.pathPageRV.layoutManager = LinearLayoutManager(this).apply {
-                    orientation = LinearLayoutManager.HORIZONTAL
-                }
+                binding.pathPageRV.layoutManager =
+                    object : LinearLayoutManager(this) {
+                        override fun smoothScrollToPosition(
+                            recyclerView: RecyclerView?,
+                            state: RecyclerView.State?,
+                            position: Int
+                        ) {
+                            val linearSmoothScroller =
+                                object : LinearSmoothScroller(recyclerView!!.context) {
+
+                                    private val MILLISECONDS_PER_INCH = 100f
+
+                                    override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
+                                        return MILLISECONDS_PER_INCH / (displayMetrics?.densityDpi
+                                            ?: 1)
+                                    }
+                                }
+                            linearSmoothScroller.targetPosition = position
+                            startSmoothScroll(linearSmoothScroller)
+                        }
+                    }.apply {
+                        orientation = LinearLayoutManager.HORIZONTAL
+                    }
             }
 
             fun setUpAdapter() {
