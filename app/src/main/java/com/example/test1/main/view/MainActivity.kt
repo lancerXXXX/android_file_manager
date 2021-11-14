@@ -1,6 +1,6 @@
 package com.example.test1.main.view
 
-import MainViewModel
+import com.example.test1.main.viewmodel.MainViewModel
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,22 +60,24 @@ class MainActivity : BaseActivity() {
         fun setupViewModel() {
 
             fun setUpLayoutManager() {
-                val layoutManager = LinearLayoutManager(this).apply {
+                binding.pathPageRV.layoutManager = LinearLayoutManager(this).apply {
                     orientation = LinearLayoutManager.HORIZONTAL
                 }
-                binding.pathPageRV.layoutManager = layoutManager
             }
 
             fun setUpAdapter() {
                 val pathPagesRVAdapter = ManyPageRVAdapter()
                 pathPagesRVAdapter.setOnItemClickListener(object :
                     ManyPageRVAdapter.OnItemClickListener {
-                    override fun onItemClick(clickedPathName: String, clickFromPageNum: Int) {
+                    override fun onFolderClick(clickedPathName: String, clickFromPageNum: Int) {
                         mainViewModel.addOnePage2SpecificPage(clickedPathName, clickFromPageNum)
                         // let pages scroll to the last page
                         binding.pathPageRV.apply {
                             smoothScrollToPosition((adapter?.itemCount ?: 1))
                         }
+                    }
+
+                    override fun onFileClick(clickedPathName: String) {
                     }
                 })
                 binding.pathPageRV.adapter = pathPagesRVAdapter
@@ -83,9 +85,10 @@ class MainActivity : BaseActivity() {
 
             fun setUpDataObserve() {
                 mainViewModel.dataSet.observe(this, {
-                    (binding.pathPageRV.adapter as ManyPageRVAdapter).setUpDataSet(it)
-                    (binding.pathPageRV.adapter as ManyPageRVAdapter)?.notifyPathRVDataSetChanged()
-                    binding.pathPageRV.adapter?.notifyDataSetChanged()
+                    binding.pathPageRV.adapter?.apply {
+                        (this as ManyPageRVAdapter).setUpDataSet(it)
+                        notifyDataSetChanged()
+                    }
                 })
             }
 

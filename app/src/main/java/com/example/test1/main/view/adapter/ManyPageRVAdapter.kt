@@ -4,10 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test1.databinding.PathPageItemBinding
+import com.example.test1.main.model.FileItem
+import com.example.test1.main.model.FolderItem
 import com.example.test1.main.model.PathPageItem
 
 // Many Pages
@@ -22,7 +23,8 @@ class ManyPageRVAdapter : RecyclerView.Adapter<ManyPageRVAdapter.ViewHolder>() {
     }
 
     interface OnItemClickListener {
-        fun onItemClick(clickedPathName: String, clickFromPageNum: Int)
+        fun onFolderClick(clickedPathName: String, clickFromPageNum: Int)
+        fun onFileClick(clickedPathName: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -52,10 +54,15 @@ class ManyPageRVAdapter : RecyclerView.Adapter<ManyPageRVAdapter.ViewHolder>() {
                 setOnItemClickListener(object : OnePageRVAdapter.OnItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
                         // the item which be clicked
-                        dataSet[holder.adapterPosition].pathItems[position].filePath.let {
-                            mClickListener.onItemClick(
-                                it, whichPage
-                            )
+                        dataSet[holder.adapterPosition].pathItems[position].apply {
+                            when (this) {
+                                is FolderItem -> {
+                                    mClickListener.onFolderClick(filePath, whichPage)
+                                }
+                                is FileItem -> {
+                                    mClickListener.onFileClick(filePath)
+                                }
+                            }
                         }
                     }
                 })
@@ -84,9 +91,6 @@ class ManyPageRVAdapter : RecyclerView.Adapter<ManyPageRVAdapter.ViewHolder>() {
     fun setUpDataSet(inputDataSet: List<PathPageItem>) {
         dataSet.clear()
         dataSet.addAll(inputDataSet)
-    }
-
-    fun notifyPathRVDataSetChanged() {
     }
 
     fun setOnItemClickListener(clickListener: ManyPageRVAdapter.OnItemClickListener) {

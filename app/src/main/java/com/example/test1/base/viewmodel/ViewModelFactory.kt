@@ -1,6 +1,6 @@
 package com.example.test1.base.viewmodel
 
-import MainViewModel
+import com.example.test1.main.viewmodel.MainViewModel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

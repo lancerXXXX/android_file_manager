@@ -1,5 +1,6 @@
 package com.example.test1.main.model
 
+import com.example.test1.base.model.PathItem
 import java.io.File
 
 data class PathPageItem(val pathItems: MutableList<PathItem>) {
@@ -7,7 +8,10 @@ data class PathPageItem(val pathItems: MutableList<PathItem>) {
         fun parseAndAddPathListFromFileList(fileList : List<File>) : MutableList<PathItem> {
             return mutableListOf<PathItem>().apply {
                 for (file in fileList) {
-                    add(PathItem(file.name, file.path))
+                    add(
+                        if (file.isDirectory) FolderItem(file.name, file.path)
+                        else FileItem(file.name, file.path)
+                    )
                 }
             }
         }
