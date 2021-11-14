@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test1.base.view.BaseActivity
 import com.example.test1.base.viewmodel.ViewModelFactory
 import com.example.test1.databinding.ActivityMainBinding
-import com.example.test1.main.view.adapter.ManyPathRVAdapter
+import com.example.test1.main.view.adapter.ManyPageRVAdapter
 
 class MainActivity : BaseActivity() {
 
@@ -38,11 +38,12 @@ class MainActivity : BaseActivity() {
             }
 
             fun setUpAdapter() {
-                val pathPagesRVAdapter = ManyPathRVAdapter()
+                val pathPagesRVAdapter = ManyPageRVAdapter()
                 pathPagesRVAdapter.setOnItemClickListener(object :
-                    ManyPathRVAdapter.OnItemClickListener {
+                    ManyPageRVAdapter.OnItemClickListener {
                     override fun onItemClick(clickedPathName: String, clickFromPageNum: Int) {
                         mainViewModel.addOnePage2SpecificPage(clickedPathName, clickFromPageNum)
+                        // let pages scroll to the last page
                         binding.pathPageRV.apply {
                             smoothScrollToPosition((adapter?.itemCount ?: 1))
                         }
@@ -53,8 +54,8 @@ class MainActivity : BaseActivity() {
 
             fun setUpDataObserve() {
                 mainViewModel.dataSet.observe(this, {
-                    (binding.pathPageRV.adapter as ManyPathRVAdapter).setUpDataSet(it)
-                    (binding.pathPageRV.adapter as ManyPathRVAdapter)?.notifyPathRVDataSetChanged()
+                    (binding.pathPageRV.adapter as ManyPageRVAdapter).setUpDataSet(it)
+                    (binding.pathPageRV.adapter as ManyPageRVAdapter)?.notifyPathRVDataSetChanged()
                     binding.pathPageRV.adapter?.notifyDataSetChanged()
                 })
             }

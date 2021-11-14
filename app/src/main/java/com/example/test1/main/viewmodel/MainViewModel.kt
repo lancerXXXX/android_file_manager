@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.test1.main.model.PathItem
 import com.example.test1.main.model.PathPageItem
 import com.example.test1.main.model.repository.PathRepository
 import com.example.test1.utils.extension.simpleLog
@@ -23,7 +22,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     init {
         _dataSetInner.apply {
             clear()
-            add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(initFirstPathPage())))
+            add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(initFirstPage())))
             _dataSet.value = this
         }
         refreshData()
@@ -33,7 +32,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _dataSet.postValue(_dataSetInner)
     }
 
-    private fun initFirstPathPage(): List<File> {
+    private fun initFirstPage(): List<File> {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             Toast.makeText(context, "the external storage is not avaliable", Toast.LENGTH_SHORT)
                 .show()
@@ -48,7 +47,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
         val parentFile = File(path)
-        simpleLog("addPathPage2WhichPage - ${path ?: "path is null"}")
         val nextPagePaths = _repository.getPathListByFile(parentFile)
         _dataSetInner.apply {
             slice(0..clickFromPage).let {
