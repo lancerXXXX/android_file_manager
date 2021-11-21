@@ -13,8 +13,6 @@ import com.example.test1.main.model.FolderItem
 import android.view.animation.AlphaAnimation
 
 
-
-
 // One Page
 class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
 
@@ -23,6 +21,7 @@ class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int)
+        fun onItemLongClick(view: View, position: Int)
     }
 
     companion object {
@@ -39,26 +38,33 @@ class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
                 parent,
                 false
             )
-            DIRECTORY_TYPE_FILE -> FileItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            DIRECTORY_TYPE_FILE -> FileItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
             else -> FileItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         }
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (holder.binding is FolderItemBinding) {
-            holder.binding.apply {
-                pathName.text = dataSet[position].pathName
-                root.setOnClickListener {
-                    itemClickListener.onItemClick(it, position)
-                }
+        holder.binding.let { binding ->
+            val pathName = when (binding) {
+                is FolderItemBinding -> binding.folderName
+                is FileItemBinding -> binding.fileName
+                else -> null
             }
-        }
-        else if (holder.binding is FileItemBinding) {
-            holder.binding.apply {
-                fileName.text = dataSet[position].pathName
-                root.setOnClickListener {
-                    itemClickListener.onItemClick(it, position)
+            pathName?.apply {
+                text = dataSet[position].pathName
+                binding.root.apply {
+                    setOnClickListener {
+                        itemClickListener.onItemClick(it, position)
+                    }
+                    setOnLongClickListener {
+                        itemClickListener.onItemLongClick(it, position)
+                        true
+                    }
                 }
             }
         }
@@ -79,12 +85,6 @@ class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
             is FileItem -> DIRECTORY_TYPE_FILE
             else -> DIRECTORY_TYPE_FILE
         }
-    }
-
-    fun setFadeAnimation(view: View) {
-        val anim = AlphaAnimation(0.0f, 1.0f)
-        anim.duration = 500
-        view.startAnimation(anim)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {

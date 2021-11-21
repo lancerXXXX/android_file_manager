@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.content.Intent
 import android.net.Uri
 import android.provider.DocumentsContract
+import android.util.Log
+import androidx.lifecycle.Observer
 
 
 class MainActivity : BaseActivity() {
@@ -75,6 +77,7 @@ class MainActivity : BaseActivity() {
                             state: RecyclerView.State?,
                             position: Int
                         ) {
+                            // fix horizontal scroll speed
                             val linearSmoothScroller =
                                 object : LinearSmoothScroller(recyclerView!!.context) {
 
@@ -84,8 +87,10 @@ class MainActivity : BaseActivity() {
                                         return MILLISECONDS_PER_INCH / (displayMetrics?.densityDpi
                                             ?: 1)
                                     }
+                                }.apply {
+                                    targetPosition = position
                                 }
-                            linearSmoothScroller.targetPosition = position
+
                             startSmoothScroll(linearSmoothScroller)
                         }
                     }.apply {
@@ -98,7 +103,7 @@ class MainActivity : BaseActivity() {
                 pathPagesRVAdapter.setOnItemClickListener(object :
                     ManyPageRVAdapter.OnItemClickListener {
                     override fun onFolderClick(clickedPathName: String, clickFromPageNum: Int) {
-                        mainViewModel.addOnePage2SpecificPage(clickedPathName, clickFromPageNum)
+                        mainViewModel.onFolderClicked(clickedPathName, clickFromPageNum)
                         // let pages scroll to the last page
                         binding.pathPageRV.apply {
                             smoothScrollToPosition((adapter?.itemCount ?: 1))
@@ -106,6 +111,15 @@ class MainActivity : BaseActivity() {
                     }
 
                     override fun onFileClick(clickedPathName: String) {
+                        mainViewModel.onFileClicked(clickedPathName)
+                    }
+
+                    override fun onFolderLongClick(clickedPathName: String, clickFromPageNum: Int) {
+                        mainViewModel.onPathLongClicked()
+                    }
+
+                    override fun onFileLongClick(clickedPathName: String) {
+                        mainViewModel.onPathLongClicked()
                     }
                 })
                 binding.pathPageRV.adapter = pathPagesRVAdapter
@@ -117,6 +131,9 @@ class MainActivity : BaseActivity() {
                         (this as ManyPageRVAdapter).setUpDataSet(it)
                         notifyDataSetChanged()
                     }
+                })
+                mainViewModel.pathLongClickEevnt.observe(this, Observer {
+                    Toast.makeText(this, "path has been clicked", Toast.LENGTH_SHORT).show()
                 })
             }
 

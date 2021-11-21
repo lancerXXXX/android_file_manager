@@ -9,13 +9,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.test1.main.model.PathPageItem
 import com.example.test1.main.model.repository.PathRepository
+import com.example.test1.utils.extension.SingleLiveEvent
 import com.example.test1.utils.extension.simpleLog
 import java.io.File
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     val dataSet: LiveData<List<PathPageItem>> get() = _dataSet
+    val pathLongClickEevnt: LiveData<Any> get() = _pathLongClickEvent
+
     private val _dataSet = MutableLiveData<List<PathPageItem>>()
     private var _dataSetInner = mutableListOf<PathPageItem>()
+
+    private val _pathLongClickEvent = SingleLiveEvent<Any>()
+
     private val _repository by lazy { PathRepository() }
 
     @SuppressLint("StaticFieldLeak")
@@ -47,7 +53,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
+    private fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
         val parentFile = File(path)
         val nextPagePaths = _repository.getPathListByFile(parentFile)
         _dataSetInner.apply {
@@ -58,5 +64,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(nextPagePaths)))
         }
         refreshData()
+    }
+
+    fun onPathLongClicked() {
+        _pathLongClickEvent.call()
+    }
+
+    fun onFolderClicked(path: String, clickFromPage: Int) {
+        addOnePage2SpecificPage(path, clickFromPage)
+    }
+
+    fun onFileClicked(path: String) {
+        onPathLongClicked()
     }
 }

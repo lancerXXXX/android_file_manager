@@ -27,6 +27,8 @@ class ManyPageRVAdapter : RecyclerView.Adapter<ManyPageRVAdapter.ViewHolder>() {
     interface OnItemClickListener {
         fun onFolderClick(clickedPathName: String, clickFromPageNum: Int)
         fun onFileClick(clickedPathName: String)
+        fun onFolderLongClick(clickedPathName: String, clickFromPageNum: Int)
+        fun onFileLongClick(clickedPathName: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -63,6 +65,20 @@ class ManyPageRVAdapter : RecyclerView.Adapter<ManyPageRVAdapter.ViewHolder>() {
                                 }
                                 is FileItem -> {
                                     mClickListener.onFileClick(filePath)
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onItemLongClick(view: View, position: Int) {
+                        // the item which be long tapped
+                        dataSet[holder.adapterPosition].pathItems[position].apply {
+                            when (this) {
+                                is FolderItem -> {
+                                    mClickListener.onFolderLongClick(filePath, whichPage)
+                                }
+                                is FileItem -> {
+                                    mClickListener.onFileLongClick(filePath)
                                 }
                             }
                         }
