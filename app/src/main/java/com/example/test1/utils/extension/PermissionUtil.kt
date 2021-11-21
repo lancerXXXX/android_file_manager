@@ -28,7 +28,6 @@ object PermissionUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val storagePermission =
                 activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            val cameraPermission = activity.checkSelfPermission(Manifest.permission.CAMERA)
 
             // check the permissions
             if (storagePermission != PackageManager.PERMISSION_GRANTED) {
