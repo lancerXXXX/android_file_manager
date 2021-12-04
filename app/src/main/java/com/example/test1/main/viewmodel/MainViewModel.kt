@@ -2,6 +2,10 @@ package com.example.test1.main.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Environment
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -12,10 +16,15 @@ import com.example.test1.main.model.repository.PathRepository
 import com.example.test1.utils.extension.SingleLiveEvent
 import com.example.test1.utils.extension.simpleLog
 import java.io.File
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
+import android.util.Log
+import com.example.test1.utils.extension.OpenFileUtil
+
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     val dataSet: LiveData<List<PathPageItem>> get() = _dataSet
-    val pathLongClickEevnt: LiveData<Any> get() = _pathLongClickEvent
+    val pathLongClickEvent: LiveData<Any> get() = _pathLongClickEvent
 
     private val _dataSet = MutableLiveData<List<PathPageItem>>()
     private var _dataSetInner = mutableListOf<PathPageItem>()
@@ -66,6 +75,33 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         refreshData()
     }
 
+    private fun openFileByPath(context: Context, path: String) {
+
+        val file = File(path)
+
+        val fileType = OpenFileUtil.MATCH_ARRAY[file.extension]
+
+        val builder = VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+
+        val fileURI = Uri.fromFile(file)
+
+        val intent = Intent().apply {
+            action = Intent.ACTION_VIEW
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addCategory(Intent.CATEGORY_DEFAULT)
+            setDataAndType(fileURI, fileType)
+        }
+
+        if (context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            context.startActivity(intent)
+        } else {
+            Toast.makeText(context, "failed to open file", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     fun onPathLongClicked() {
         _pathLongClickEvent.call()
     }
@@ -74,7 +110,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         addOnePage2SpecificPage(path, clickFromPage)
     }
 
-    fun onFileClicked(path: String) {
-        onPathLongClicked()
+    fun onFileClicked(context: Context, path: String) {
+        openFileByPath(context, path)
     }
 }

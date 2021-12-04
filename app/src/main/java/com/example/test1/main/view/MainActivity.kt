@@ -1,6 +1,5 @@
 package com.example.test1.main.view
 
-import android.annotation.SuppressLint
 import com.example.test1.main.viewmodel.MainViewModel
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -16,10 +15,6 @@ import android.content.pm.PackageManager
 import android.util.DisplayMetrics
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
-import android.content.Intent
-import android.net.Uri
-import android.provider.DocumentsContract
-import android.util.Log
 import androidx.lifecycle.Observer
 
 
@@ -111,7 +106,7 @@ class MainActivity : BaseActivity() {
                     }
 
                     override fun onFileClick(clickedPathName: String) {
-                        mainViewModel.onFileClicked(clickedPathName)
+                        mainViewModel.onFileClicked(this@MainActivity, clickedPathName)
                     }
 
                     override fun onFolderLongClick(clickedPathName: String, clickFromPageNum: Int) {
@@ -132,8 +127,8 @@ class MainActivity : BaseActivity() {
                         notifyDataSetChanged()
                     }
                 })
-                mainViewModel.pathLongClickEevnt.observe(this, Observer {
-                    Toast.makeText(this, "path has been clicked", Toast.LENGTH_SHORT).show()
+                mainViewModel.pathLongClickEvent.observe(this, Observer {
+                    Toast.makeText(this, "path has been long clicked", Toast.LENGTH_SHORT).show()
                 })
             }
 
