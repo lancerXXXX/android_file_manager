@@ -1,13 +1,16 @@
 package com.example.test1.main.view.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.example.test1.R
 import com.example.test1.databinding.PathPageItemBinding
 import com.example.test1.main.model.FileItem
 import com.example.test1.main.model.FolderItem
@@ -62,6 +65,7 @@ class ManyPageRVAdapter : RecyclerView.Adapter<ManyPageRVAdapter.ViewHolder>() {
                             when (this) {
                                 is FolderItem -> {
                                     mClickListener.onFolderClick(filePath, whichPage)
+                                    dataSet[whichPage].selectedIndex = position
                                 }
                                 is FileItem -> {
                                     mClickListener.onFileClick(filePath)
@@ -89,7 +93,10 @@ class ManyPageRVAdapter : RecyclerView.Adapter<ManyPageRVAdapter.ViewHolder>() {
         }
 
         fun setupDataSet() {
-            (holder.binding.pathRV.adapter as OnePageRVAdapter).setDataSet(dataSet[position].pathItems)
+            (holder.binding.pathRV.adapter as OnePageRVAdapter).apply {
+                setDataSet(dataSet[position].pathItems)
+                selectedPathIndex = dataSet[position].selectedIndex
+            }
         }
 
         fun  setupOnePage() {

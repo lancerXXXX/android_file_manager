@@ -1,5 +1,9 @@
 package com.example.test1.main.view.adapter
 
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +15,8 @@ import com.example.test1.databinding.FolderItemBinding
 import com.example.test1.main.model.FileItem
 import com.example.test1.main.model.FolderItem
 import android.view.animation.AlphaAnimation
+import android.widget.TextView
+import com.example.test1.R
 
 
 // One Page
@@ -18,6 +24,7 @@ class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
 
     private val dataSet: MutableList<PathItem> = mutableListOf()
     private lateinit var itemClickListener: OnItemClickListener
+    var selectedPathIndex = -1
 
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int)
@@ -50,11 +57,23 @@ class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.let { binding ->
-            val pathName = when (binding) {
-                is FolderItemBinding -> binding.folderName
-                is FileItemBinding -> binding.fileName
+            val context = binding.root.context
+            var pathName: TextView? = null
+
+            when (binding) {
+                is FolderItemBinding -> {
+                    pathName = binding.folderName
+                    Log.d("swithun-xxxx", "position: $position selectedPathIndex: $selectedPathIndex")
+                    if (position == selectedPathIndex) {
+                        binding.pathIcon.background = context.getDrawable(R.color.greenyellow)
+                    }
+                }
+                is FileItemBinding -> {
+                    pathName = binding.fileName
+                }
                 else -> null
             }
+
             pathName?.apply {
                 text = dataSet[position].pathName
                 binding.root.apply {

@@ -28,7 +28,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _dataSet = MutableLiveData<List<PathPageItem>>()
     private var _dataSetInner = mutableListOf<PathPageItem>()
-
     private val _pathLongClickEvent = SingleLiveEvent<Any>()
 
     private val _repository by lazy { PathRepository() }
