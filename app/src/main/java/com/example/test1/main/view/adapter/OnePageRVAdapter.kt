@@ -1,8 +1,5 @@
 package com.example.test1.main.view.adapter
 
-import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +11,6 @@ import com.example.test1.databinding.FileItemBinding
 import com.example.test1.databinding.FolderItemBinding
 import com.example.test1.main.model.FileItem
 import com.example.test1.main.model.FolderItem
-import android.view.animation.AlphaAnimation
 import android.widget.TextView
 import com.example.test1.R
 
@@ -60,12 +56,16 @@ class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
             val context = binding.root.context
             var pathName: TextView? = null
 
+            Log.d("swithun-xxxx", "render position: $position")
+
             when (binding) {
                 is FolderItemBinding -> {
                     pathName = binding.folderName
-                    Log.d("swithun-xxxx", "position: $position selectedPathIndex: $selectedPathIndex")
                     if (position == selectedPathIndex) {
-                        binding.pathIcon.background = context.getDrawable(R.color.greenyellow)
+                        binding.pathIcon.background = context.getDrawable(R.color.blueviolet)
+                    }
+                    else {
+                        binding.pathIcon.background = context.getDrawable(R.color.black)
                     }
                 }
                 is FileItemBinding -> {
