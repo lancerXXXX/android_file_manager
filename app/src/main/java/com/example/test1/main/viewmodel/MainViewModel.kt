@@ -18,16 +18,20 @@ import com.example.test1.utils.extension.simpleLog
 import java.io.File
 import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
-import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.test1.utils.extension.OpenFileUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+    // file paths container container
     val dataSet: LiveData<List<PathPageItem>> get() = _dataSet
-    val pathLongClickEvent: LiveData<Any> get() = _pathLongClickEvent
-
     private val _dataSet = MutableLiveData<List<PathPageItem>>()
-    private var _dataSetInner = mutableListOf<PathPageItem>()
+    private var _dataSetProxy = mutableListOf<PathPageItem>()
+
+    // file path clickListener
+    val pathLongClickEvent: LiveData<Any> get() = _pathLongClickEvent
     private val _pathLongClickEvent = SingleLiveEvent<Any>()
 
     private val _repository by lazy { PathRepository() }
@@ -36,19 +40,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val context = getApplication<Application>().applicationContext
 
     init {
-        _dataSetInner.apply {
-            clear()
-            add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(initFirstPage())))
-            _dataSet.value = this
+        _dataSetProxy.let { dataProxy ->
+            dataProxy.clear()
+            viewModelScope.launch(Dispatchers.IO) {
+                dataProxy.add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(initFirstPage())))
+                refreshData()
+            }
         }
-        refreshData()
     }
 
     private fun refreshData() {
-        _dataSet.postValue(_dataSetInner)
+        _dataSet.postValue(_dataSetProxy)
     }
 
-    private fun initFirstPage(): List<File> {
+    private suspend fun initFirstPage(): List<File> {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             Toast.makeText(context, "the external storage is not avaliable", Toast.LENGTH_SHORT)
                 .show()
@@ -61,10 +66,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
+    private suspend fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
         val parentFile = File(path)
         val nextPagePaths = _repository.getPathListByFile(parentFile)
-        _dataSetInner.apply {
+        _dataSetProxy.apply {
             slice(0..clickFromPage).let {
                 this.clear()
                 this.addAll(it)
@@ -106,7 +111,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onFolderClicked(path: String, clickFromPage: Int) {
-        addOnePage2SpecificPage(path, clickFromPage)
+        viewModelScope.launch(Dispatchers.IO) {
+            addOnePage2SpecificPage(path, clickFromPage)
+        }
     }
 
     fun onFileClicked(context: Context, path: String) {

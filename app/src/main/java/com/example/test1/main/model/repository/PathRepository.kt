@@ -1,13 +1,17 @@
 package com.example.test1.main.model.repository
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
 class PathRepository {
 
-    fun getPathListByFile(file: File): List<File> {
+    suspend fun getPathListByFile(file: File): List<File> = withContext(Dispatchers.IO){
 
+        delay(3000)
         val result = mutableListOf<File>()
         file.listFiles()?.let {
             result.addAll(it)
@@ -15,7 +19,7 @@ class PathRepository {
             Log.d("swithun-xxxx", "nulllllllllll")
         }
 
-        return result
+        return@withContext result
     }
 
 }
