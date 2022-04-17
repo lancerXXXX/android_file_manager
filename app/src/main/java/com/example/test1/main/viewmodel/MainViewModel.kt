@@ -21,18 +21,20 @@ import android.os.StrictMode.VmPolicy
 import androidx.lifecycle.viewModelScope
 import com.example.test1.utils.extension.OpenFileUtil
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    // file paths container container
-    val dataSet: LiveData<List<PathPageItem>> get() = _dataSet
-    private val _dataSet = MutableLiveData<List<PathPageItem>>()
-    private var _dataSetProxy = mutableListOf<PathPageItem>()
 
     // file path clickListener
     val pathLongClickEvent: LiveData<Any> get() = _pathLongClickEvent
     private val _pathLongClickEvent = SingleLiveEvent<Any>()
+
+    // file paths container container
+    val dataSetTest: StateFlow<List<PathPageItem>> get() = _dataSetTest
+    private val _dataSetTest = MutableStateFlow<MutableList<PathPageItem>>(mutableListOf())
 
     private val _repository by lazy { PathRepository() }
 
@@ -40,17 +42,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val context = getApplication<Application>().applicationContext
 
     init {
-        _dataSetProxy.let { dataProxy ->
-            dataProxy.clear()
-            viewModelScope.launch(Dispatchers.IO) {
-                dataProxy.add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(initFirstPage())))
-                refreshData()
-            }
+        viewModelScope.launch {
+            _dataSetTest.value = mutableListOf(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(initFirstPage())))
         }
-    }
-
-    private fun refreshData() {
-        _dataSet.postValue(_dataSetProxy)
     }
 
     private suspend fun initFirstPage(): List<File> {
@@ -69,14 +63,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
         val parentFile = File(path)
         val nextPagePaths = _repository.getPathListByFile(parentFile)
-        _dataSetProxy.apply {
-            slice(0..clickFromPage).let {
-                this.clear()
-                this.addAll(it)
-            }
-            add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(nextPagePaths)))
+
+        val pageData = _dataSetTest.value.slice(0..clickFromPage).toMutableList().also {
+            it.add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(nextPagePaths)))
         }
-        refreshData()
+        _dataSetTest.value = pageData
     }
 
     private fun openFileByPath(context: Context, path: String) {
@@ -111,7 +102,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onFolderClicked(path: String, clickFromPage: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             addOnePage2SpecificPage(path, clickFromPage)
         }
     }

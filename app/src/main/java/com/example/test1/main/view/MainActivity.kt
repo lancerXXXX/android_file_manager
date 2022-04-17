@@ -2,7 +2,6 @@ package com.example.test1.main.view
 
 import com.example.test1.main.viewmodel.MainViewModel
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test1.base.view.BaseActivity
 import com.example.test1.base.viewmodel.ViewModelFactory
@@ -13,9 +12,12 @@ import android.widget.Toast
 import android.os.Environment
 import android.content.pm.PackageManager
 import android.util.DisplayMetrics
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
-import androidx.lifecycle.Observer
+import com.example.test1.utils.extension.simpleLog
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class MainActivity : BaseActivity() {
@@ -121,15 +123,21 @@ class MainActivity : BaseActivity() {
             }
 
             fun setUpDataObserve() {
-                mainViewModel.dataSet.observe(this, {
-                    binding.pathPageRV.adapter?.apply {
-                        (this as ManyPageRVAdapter).setUpDataSet(it)
-                        notifyDataSetChanged()
-                    }
-                })
                 mainViewModel.pathLongClickEvent.observe(this, Observer {
                     Toast.makeText(this, "path has been long clicked", Toast.LENGTH_SHORT).show()
                 })
+
+                lifecycleScope.launch {
+                    lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        mainViewModel.dataSetTest.collect {
+                            binding.pathPageRV.adapter?.apply {
+                                (this as ManyPageRVAdapter).setUpDataSet(it)
+                                notifyDataSetChanged()
+                            }
+                        }
+                    }
+                }
+
             }
 
             mainViewModel = ViewModelProvider(this, ViewModelFactory(this.application)).get(
