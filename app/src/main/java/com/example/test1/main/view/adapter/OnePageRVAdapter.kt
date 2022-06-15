@@ -56,7 +56,7 @@ class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
             val context = binding.root.context
             var pathName: TextView? = null
 
-            Log.d("swithun-xxxx", "render position: $position")
+            // Log.d("swithun-xxxx", "render position: $position")
 
             when (binding) {
                 is FolderItemBinding -> {

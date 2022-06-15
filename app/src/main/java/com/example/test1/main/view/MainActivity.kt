@@ -1,5 +1,6 @@
 package com.example.test1.main.view
 
+import android.annotation.SuppressLint
 import com.example.test1.main.viewmodel.MainViewModel
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -100,11 +101,10 @@ class MainActivity : BaseActivity() {
                 pathPagesRVAdapter.setOnItemClickListener(object :
                     ManyPageRVAdapter.OnItemClickListener {
                     override fun onFolderClick(clickedPathName: String, clickFromPageNum: Int) {
+                        this.simpleLog("onFolderClick")
                         mainViewModel.onFolderClicked(clickedPathName, clickFromPageNum)
-                        // let pages scroll to the last page
-                        binding.pathPageRV.apply {
-                            smoothScrollToPosition((adapter?.itemCount ?: 1))
-                        }
+                        this.simpleLog("adapter == null: ${binding.pathPageRV.adapter == null}")
+                        binding.pathPageRV.adapter?.notifyDataSetChanged()
                     }
 
                     override fun onFileClick(clickedPathName: String) {
@@ -129,10 +129,15 @@ class MainActivity : BaseActivity() {
 
                 lifecycleScope.launch {
                     lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        mainViewModel.dataSetTest.collect {
+                        mainViewModel.dataSetTest.collect { newFirstLevelPathList ->
+                            this.simpleLog("collect")
                             binding.pathPageRV.adapter?.apply {
-                                (this as ManyPageRVAdapter).setUpDataSet(it)
+                                (this as ManyPageRVAdapter).setUpDataSet(newFirstLevelPathList)
                                 notifyDataSetChanged()
+                            }
+                            // let pages scroll to the last page
+                            binding.pathPageRV.apply {
+                                smoothScrollToPosition((adapter?.itemCount ?: 1))
                             }
                         }
                     }

@@ -61,12 +61,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
+
+        this.simpleLog("try get PageData")
         val parentFile = File(path)
         val nextPagePaths = _repository.getPathListByFile(parentFile)
 
         val pageData = _dataSetTest.value.slice(0..clickFromPage).toMutableList().also {
             it.add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(nextPagePaths)))
         }
+        this.simpleLog("got PageData")
         _dataSetTest.value = pageData
     }
 
