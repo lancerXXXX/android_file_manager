@@ -1,13 +1,11 @@
 package com.example.test1.main.view
 
-import android.annotation.SuppressLint
 import com.example.test1.main.viewmodel.MainViewModel
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test1.base.view.BaseActivity
 import com.example.test1.base.viewmodel.ViewModelFactory
 import com.example.test1.databinding.ActivityMainBinding
-import com.example.test1.main.view.adapter.ManyPageRVAdapter
 import com.example.test1.utils.extension.PermissionUtils
 import android.widget.Toast
 import android.os.Environment
@@ -16,6 +14,7 @@ import android.util.DisplayMetrics
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.example.test1.main.view.adapter.NEWFirstLevelPageRVAdapter
 import com.example.test1.utils.extension.simpleLog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -97,9 +96,9 @@ class MainActivity : BaseActivity() {
             }
 
             fun setUpAdapter() {
-                val pathPagesRVAdapter = ManyPageRVAdapter()
+                val pathPagesRVAdapter = NEWFirstLevelPageRVAdapter()
                 pathPagesRVAdapter.setOnItemClickListener(object :
-                    ManyPageRVAdapter.OnItemClickListener {
+                    NEWFirstLevelPageRVAdapter.OnItemClickListener {
                     override fun onFolderClick(clickedPathName: String, clickFromPageNum: Int) {
                         this.simpleLog("onFolderClick")
                         mainViewModel.onFolderClicked(clickedPathName, clickFromPageNum)
@@ -132,8 +131,7 @@ class MainActivity : BaseActivity() {
                         mainViewModel.dataSetTest.collect { newFirstLevelPathList ->
                             this.simpleLog("collect")
                             binding.pathPageRV.adapter?.apply {
-                                (this as ManyPageRVAdapter).setUpDataSet(newFirstLevelPathList)
-                                notifyDataSetChanged()
+                                (this as NEWFirstLevelPageRVAdapter).submitList(newFirstLevelPathList)
                             }
                             // let pages scroll to the last page
                             binding.pathPageRV.apply {

@@ -11,7 +11,6 @@ class PathRepository {
 
     suspend fun getPathListByFile(file: File): List<File> = withContext(Dispatchers.IO){
 
-        delay(3000)
         val result = mutableListOf<File>()
         file.listFiles()?.let {
             result.addAll(it)

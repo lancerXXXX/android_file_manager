@@ -62,7 +62,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun addOnePage2SpecificPage(path: String, clickFromPage: Int) {
 
-        this.simpleLog("try get PageData")
+        this.simpleLog("try get PageData : path: $path clickFromPage: $clickFromPage")
         val parentFile = File(path)
         val nextPagePaths = _repository.getPathListByFile(parentFile)
 

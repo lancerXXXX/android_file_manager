@@ -1,6 +1,5 @@
 package com.example.test1.main.view.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import com.example.test1.R
 
 
 // One Page
-class OnePageRVAdapter : RecyclerView.Adapter<OnePageRVAdapter.ViewHolder>() {
+class SecondLevelPageRVAdapter : RecyclerView.Adapter<SecondLevelPageRVAdapter.ViewHolder>() {
 
     private val dataSet: MutableList<PathItem> = mutableListOf()
     private lateinit var itemClickListener: OnItemClickListener
