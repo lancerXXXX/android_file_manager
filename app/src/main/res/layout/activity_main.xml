@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/common_bg"
     tools:context=".main.view.MainActivity">
 
     <com.example.test1.common.CommonTitleBar
@@ -23,7 +24,6 @@
         android:id="@+id/path_page_RV"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#D4C900"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

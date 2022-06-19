@@ -11,7 +11,7 @@ import com.example.test1.databinding.FolderItemBinding
 import com.example.test1.main.model.FileItem
 import com.example.test1.main.model.FolderItem
 import android.widget.TextView
-import com.example.test1.R
+import com.example.test1.utils.ThemeUtil
 
 
 // One Page
@@ -55,26 +55,35 @@ class SecondLevelPageRVAdapter : RecyclerView.Adapter<SecondLevelPageRVAdapter.V
             val context = binding.root.context
             var pathName: TextView? = null
 
-            // Log.d("swithun-xxxx", "render position: $position")
-
             when (binding) {
+                // Folder
                 is FolderItemBinding -> {
                     pathName = binding.folderName
-                    if (position == selectedPathIndex) {
-                        binding.pathIcon.background = context.getDrawable(R.color.blueviolet)
-                    }
-                    else {
-                        binding.pathIcon.background = context.getDrawable(R.color.black)
-                    }
+                    val theme =
+                        if (position == selectedPathIndex) ThemeUtil.getFolderSelectedTheme()
+                        else ThemeUtil.getFolderTheme()
+
+                    // 1. icon
+                    binding.pathIcon.background = context.getDrawable(theme.t1)
+                    // 2. name
+                    binding.folderName.setTextColor(context.getColor(theme.t2))
+                    // 3. bg
+                    binding.root.setCardBackgroundColor(context.getColor(theme.t3))
                 }
+                // File
                 is FileItemBinding -> {
                     pathName = binding.fileName
+                    val theme = ThemeUtil.getFileTheme()
+                    // 1. icon
+                    binding.fileIcon.background = context.getDrawable(theme.t1)
+                    // 2. name
+                    binding.fileName.setTextColor(context.getColor(theme.t2))
                 }
                 else -> null
             }
 
-            pathName?.apply {
-                text = dataSet[position].pathName
+            pathName?.let { tv ->
+                tv.text = dataSet[position].pathName
                 binding.root.apply {
                     setOnClickListener {
                         itemClickListener.onItemClick(it, position)

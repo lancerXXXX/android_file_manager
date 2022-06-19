@@ -1,0 +1,12 @@
+package com.example.test1.utils
+
+data class NTuple2<T1, T2>(val t1: T1, val t2: T2)
+data class NTuple3<T1, T2, T3>(val t1: T1, val t2: T2, val t3: T3)
+
+infix fun <T1, T2> T1.then(t2: T2): NTuple2<T1, T2> {
+    return NTuple2(this, t2)
+}
+
+infix fun <T1, T2, T3> NTuple2<T1, T2>.then(t3: T3): NTuple3<T1, T2, T3> {
+    return NTuple3(this.t1, this.t2, t3)
+}

@@ -6,7 +6,9 @@
     android:layout_marginLeft="5dp"
     android:layout_marginTop="3dp"
     android:layout_marginRight="5dp"
-    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/common_bg"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="3dp"
     app:contentPadding="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +19,7 @@
             android:id="@+id/path_icon"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:background="@color/black"
+            android:background="@color/purple1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/folder_name"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="path_name"
+            android:textColor="@color/text_common"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/path_icon"
