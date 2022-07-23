@@ -14,7 +14,7 @@ import android.util.DisplayMetrics
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
-import com.example.test1.main.view.adapter.NEWFirstLevelPageRVAdapter
+import com.example.test1.main.view.adapter.pagelist.PageListRVAdapter
 import com.example.test1.utils.extension.simpleLog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -96,9 +96,9 @@ class MainActivity : BaseActivity() {
             }
 
             fun setUpAdapter() {
-                val pathPagesRVAdapter = NEWFirstLevelPageRVAdapter()
+                val pathPagesRVAdapter = PageListRVAdapter()
                 pathPagesRVAdapter.setOnItemClickListener(object :
-                    NEWFirstLevelPageRVAdapter.OnItemClickListener {
+                    PageListRVAdapter.OnItemClickListener {
                     override fun onFolderClick(clickedPathName: String, clickFromPageNum: Int) {
                         this.simpleLog("onFolderClick")
                         mainViewModel.onFolderClicked(clickedPathName, clickFromPageNum)
@@ -128,10 +128,10 @@ class MainActivity : BaseActivity() {
 
                 lifecycleScope.launch {
                     lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        mainViewModel.dataSetTest.collect { newFirstLevelPathList ->
+                        mainViewModel.pageList.collect { newFirstLevelPathList ->
                             this.simpleLog("collect")
                             binding.pathPageRV.adapter?.apply {
-                                (this as NEWFirstLevelPageRVAdapter).submitList(newFirstLevelPathList)
+                                (this as PageListRVAdapter).submitList(newFirstLevelPathList)
                             }
                             // let pages scroll to the last page
                             binding.pathPageRV.apply {

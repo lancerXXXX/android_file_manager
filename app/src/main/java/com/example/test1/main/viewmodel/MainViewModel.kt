@@ -10,8 +10,7 @@ import android.os.Environment
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.test1.main.model.PathPageItem
+import com.example.test1.main.model.PageData
 import com.example.test1.main.model.repository.PathRepository
 import com.example.test1.utils.extension.SingleLiveEvent
 import com.example.test1.utils.extension.simpleLog
@@ -20,7 +19,6 @@ import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
 import androidx.lifecycle.viewModelScope
 import com.example.test1.utils.extension.OpenFileUtil
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -33,8 +31,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _pathLongClickEvent = SingleLiveEvent<Any>()
 
     // file paths container container
-    val dataSetTest: StateFlow<List<PathPageItem>> get() = _dataSetTest
-    private val _dataSetTest = MutableStateFlow<MutableList<PathPageItem>>(mutableListOf())
+    val pageList: StateFlow<List<PageData>> get() = _pageList
+    private val _pageList = MutableStateFlow<MutableList<PageData>>(mutableListOf())
 
     private val _repository by lazy { PathRepository() }
 
@@ -43,7 +41,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            _dataSetTest.value = mutableListOf(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(initFirstPage())))
+            _pageList.value = mutableListOf(PageData(PageData.parseAndAddPathListFromFileList(initFirstPage())))
         }
     }
 
@@ -66,11 +64,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val parentFile = File(path)
         val nextPagePaths = _repository.getPathListByFile(parentFile)
 
-        val pageData = _dataSetTest.value.slice(0..clickFromPage).toMutableList().also {
-            it.add(PathPageItem(PathPageItem.parseAndAddPathListFromFileList(nextPagePaths)))
+        val pageData = _pageList.value.slice(0..clickFromPage).toMutableList().also {
+            it.add(PageData(PageData.parseAndAddPathListFromFileList(nextPagePaths)))
         }
+
         this.simpleLog("got PageData")
-        _dataSetTest.value = pageData
+        _pageList.value = pageData
     }
 
     private fun openFileByPath(context: Context, path: String) {
