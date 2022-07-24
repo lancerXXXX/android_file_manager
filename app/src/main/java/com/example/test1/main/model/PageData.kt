@@ -1,13 +1,20 @@
 package com.example.test1.main.model
 
+import com.example.test1.utils.extension.simpleLog
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
 
-private val contentIdCreator = AtomicLong()
+private val pageListContentIdCreator = AtomicLong()
 
-data class PageData(val pathItems: MutableList<PathData>, var selectedIndex: Int = -1) {
+data class PageData(
+    val path: String,
+    val pathItems: MutableList<PathData>,
+    var selectedIndex: Int = -1
+) {
 
-    val uId: Long = contentIdCreator.incrementAndGet()
+    val contentId: Long = pageListContentIdCreator.incrementAndGet().also {
+        this.simpleLog("PageData: path: $path - uid: $it")
+    }
 
     companion object {
         fun parseAndAddPathListFromFileList(fileList : List<File>) : MutableList<PathData> {

@@ -24,11 +24,11 @@ class PageListRVAdapter : ListAdapter<PageData, PageViewHolder>(FirstLevelDiffCa
     class FirstLevelDiffCallback : DiffUtil.ItemCallback<PageData>() {
 
         override fun areItemsTheSame(oldItem: PageData, newItem: PageData): Boolean {
-            return oldItem.pathItems == newItem.pathItems
+            return oldItem.path == newItem.path
         }
 
         override fun areContentsTheSame(oldItem: PageData, newItem: PageData): Boolean {
-            return oldItem == newItem
+            return oldItem.contentId == newItem.contentId
         }
 
     }

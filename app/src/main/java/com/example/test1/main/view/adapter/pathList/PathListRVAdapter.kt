@@ -17,7 +17,7 @@ import com.example.test1.main.view.adapter.pathList.viewholder.PathViewHolder
 // One Page
 class PathListRVAdapter : RecyclerView.Adapter<PathViewHolder>() {
 
-    private val dataSet: MutableList<PathData> = mutableListOf()
+    private val pathList: MutableList<PathData> = mutableListOf()
     private lateinit var itemClickListener: OnItemClickListener
     var selectedPathIndex = -1
 
@@ -45,12 +45,12 @@ class PathListRVAdapter : RecyclerView.Adapter<PathViewHolder>() {
     override fun onBindViewHolder(holder: PathViewHolder, position: Int) {
         when (holder) {
             is FileViewHolder -> {
-                (dataSet[position] as? FileItem)?.let { fileItem ->
+                (pathList[position] as? FileItem)?.let { fileItem ->
                     holder.bind(fileItem, itemClickListener)
                 }
             }
             is FolderViewHolder -> {
-                (dataSet[position] as? FolderItem)?.let { folderItem ->
+                (pathList[position] as? FolderItem)?.let { folderItem ->
                     holder.bind(folderItem , selectedPathIndex, itemClickListener)
                 }
             }
@@ -58,18 +58,19 @@ class PathListRVAdapter : RecyclerView.Adapter<PathViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return dataSet.size
+        return pathList.size
     }
 
     fun setDataSet(inputDataSet: List<PathData>) {
-        dataSet.clear()
-        dataSet.addAll(inputDataSet)
+        pathList.clear()
+        pathList.addAll(inputDataSet)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (dataSet[position]) {
+        return when (pathList[position]) {
             is FolderItem -> DIRECTORY_TYPE_FOLDER
             is FileItem -> DIRECTORY_TYPE_FILE
+            else -> DIRECTORY_TYPE_FOLDER
         }
     }
 

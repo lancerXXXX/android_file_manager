@@ -1,6 +1,6 @@
 package com.example.test1.main.view
 
-import com.example.test1.main.viewmodel.MainViewModel
+import com.example.test1.main.viewmodel.PageListViewModel
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test1.base.view.BaseActivity
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var pageListViewModel: PageListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,34 +101,34 @@ class MainActivity : BaseActivity() {
                     PageListRVAdapter.OnItemClickListener {
                     override fun onFolderClick(clickedPathName: String, clickFromPageNum: Int) {
                         this.simpleLog("onFolderClick")
-                        mainViewModel.onFolderClicked(clickedPathName, clickFromPageNum)
+                        pageListViewModel.onFolderClicked(clickedPathName, clickFromPageNum)
                         this.simpleLog("adapter == null: ${binding.pathPageRV.adapter == null}")
                         binding.pathPageRV.adapter?.notifyDataSetChanged()
                     }
 
                     override fun onFileClick(clickedPathName: String) {
-                        mainViewModel.onFileClicked(this@MainActivity, clickedPathName)
+                        pageListViewModel.onFileClicked(this@MainActivity, clickedPathName)
                     }
 
                     override fun onFolderLongClick(clickedPathName: String, clickFromPageNum: Int) {
-                        mainViewModel.onPathLongClicked()
+                        pageListViewModel.onPathLongClicked()
                     }
 
                     override fun onFileLongClick(clickedPathName: String) {
-                        mainViewModel.onPathLongClicked()
+                        pageListViewModel.onPathLongClicked()
                     }
                 })
                 binding.pathPageRV.adapter = pathPagesRVAdapter
             }
 
             fun setUpDataObserve() {
-                mainViewModel.pathLongClickEvent.observe(this, Observer {
+                pageListViewModel.pathLongClickEvent.observe(this, Observer {
                     Toast.makeText(this, "path has been long clicked", Toast.LENGTH_SHORT).show()
                 })
 
                 lifecycleScope.launch {
                     lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        mainViewModel.pageList.collect { newFirstLevelPathList ->
+                        pageListViewModel.pageList.collect { newFirstLevelPathList ->
                             this.simpleLog("collect")
                             binding.pathPageRV.adapter?.apply {
                                 (this as PageListRVAdapter).submitList(newFirstLevelPathList)
@@ -143,8 +143,8 @@ class MainActivity : BaseActivity() {
 
             }
 
-            mainViewModel = ViewModelProvider(this, ViewModelFactory(this.application)).get(
-                MainViewModel::class.java
+            pageListViewModel = ViewModelProvider(this, ViewModelFactory(this.application)).get(
+                PageListViewModel::class.java
             )
 
             setUpLayoutManager()

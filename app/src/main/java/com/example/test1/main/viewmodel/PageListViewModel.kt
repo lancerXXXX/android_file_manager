@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class PageListViewModel(application: Application) : AndroidViewModel(application) {
 
     // file path clickListener
     val pathLongClickEvent: LiveData<Any> get() = _pathLongClickEvent
@@ -36,12 +36,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _repository by lazy { PathRepository() }
 
+    private val rootFile = Environment.getExternalStorageDirectory().also {
+        this.simpleLog("rootFile: ${it.path}")
+    }
+
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext
 
     init {
         viewModelScope.launch {
-            _pageList.value = mutableListOf(PageData(PageData.parseAndAddPathListFromFileList(initFirstPage())))
+            _pageList.value = mutableListOf(PageData(rootFile.path, PageData.parseAndAddPathListFromFileList(initFirstPage())))
         }
     }
 
@@ -51,7 +55,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 .show()
             return mutableListOf()
         }
-        val rootFile = Environment.getExternalStorageDirectory()
         return _repository.getPathListByFile(rootFile).apply {
             simpleLog(toString())
             sortedBy { it.name }
@@ -65,7 +68,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val nextPagePaths = _repository.getPathListByFile(parentFile)
 
         val pageData = _pageList.value.slice(0..clickFromPage).toMutableList().also {
-            it.add(PageData(PageData.parseAndAddPathListFromFileList(nextPagePaths)))
+            it.add(PageData(path, PageData.parseAndAddPathListFromFileList(nextPagePaths)))
         }
 
         this.simpleLog("got PageData")
