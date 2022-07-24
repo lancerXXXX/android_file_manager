@@ -21,8 +21,8 @@ data class PageData(
             return mutableListOf<PathData>().apply {
                 for (file in fileList) {
                     add(
-                        if (file.isDirectory) FolderItem(file.name, file.path)
-                        else FileItem(file.name, file.path)
+                        if (file.isDirectory) FolderItem(0, file.name, file.path)
+                        else FileItem(0, file.name, file.path)
                     )
                 }
             }

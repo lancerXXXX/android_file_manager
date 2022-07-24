@@ -1,4 +1,4 @@
-package com.example.test1.main.view.adapter.pathList.viewholder
+package com.example.test1.main.view.adapter.pathList.view.adapter.viewholder
 
 import android.content.Context
 import android.view.View

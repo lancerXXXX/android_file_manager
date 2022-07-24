@@ -8,7 +8,7 @@ import com.example.test1.main.model.FileItem
 import com.example.test1.main.model.FolderItem
 import com.example.test1.main.model.PageData
 import com.example.test1.main.view.adapter.pagelist.PageListRVAdapter
-import com.example.test1.main.view.adapter.pathList.PathListRVAdapter
+import com.example.test1.main.view.adapter.pathList.view.adapter.PathListRVAdapter
 
 class PageViewHolder(private val binding: PathPageItemBinding) : RecyclerView.ViewHolder(binding.root) {
     
@@ -34,10 +34,10 @@ class PageViewHolder(private val binding: PathPageItemBinding) : RecyclerView.Vi
                         page.pathItems.getOrNull(position)?.let { path ->
                             when (path) {
                                 is FileItem -> {
-                                    clickListener.onFileClick(path.filePath)
+                                    clickListener.onFileClick(path.fullPath)
                                 }
                                 is FolderItem -> {
-                                    clickListener.onFolderClick(path.filePath, whichPage)
+                                    clickListener.onFolderClick(path.fullPath, whichPage)
                                     page.selectedIndex = position
                                 }
                             }
@@ -47,8 +47,8 @@ class PageViewHolder(private val binding: PathPageItemBinding) : RecyclerView.Vi
                     override fun onItemLongClick(view: View, position: Int) {
                         page.pathItems.getOrNull(position).let { pathItem ->
                             when (pathItem) {
-                                is FolderItem -> clickListener.onFolderLongClick(pathItem.filePath, whichPage)
-                                is FileItem -> clickListener.onFileLongClick(pathItem.filePath)
+                                is FolderItem -> clickListener.onFolderLongClick(pathItem.fullPath, whichPage)
+                                is FileItem -> clickListener.onFileLongClick(pathItem.fullPath)
                             }
                         }
                     }

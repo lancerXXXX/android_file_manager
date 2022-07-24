@@ -11,8 +11,10 @@
         <entry key="app/src/main/res/layout/folder_item.xml" value="0.34322916666666664" />
         <entry key="app/src/main/res/layout/layout.xml" value="0.34322916666666664" />
         <entry key="app/src/main/res/layout/path_item.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/path_list_container.xml" value="0.353713768115942" />
         <entry key="app/src/main/res/layout/path_page_item.xml" value="0.34322916666666664" />
         <entry key="app/src/main/res/layout/sample_common_title_bar.xml" value="0.34322916666666664" />
+        <entry key="app/src/main/res/layout/sample_path_list_container.xml" value="0.353713768115942" />
       </map>
     </option>
   </component>

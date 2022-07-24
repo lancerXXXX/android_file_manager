@@ -1,21 +1,22 @@
-package com.example.test1.main.view.adapter.pathList
+package com.example.test1.main.view.adapter.pathList.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.example.test1.main.model.PathData
 import com.example.test1.databinding.FileItemBinding
 import com.example.test1.databinding.FolderItemBinding
 import com.example.test1.main.model.FileItem
 import com.example.test1.main.model.FolderItem
-import com.example.test1.main.view.adapter.pathList.viewholder.FileViewHolder
-import com.example.test1.main.view.adapter.pathList.viewholder.FolderViewHolder
-import com.example.test1.main.view.adapter.pathList.viewholder.PathViewHolder
+import com.example.test1.main.view.adapter.pathList.view.adapter.viewholder.FileViewHolder
+import com.example.test1.main.view.adapter.pathList.view.adapter.viewholder.FolderViewHolder
+import com.example.test1.main.view.adapter.pathList.view.adapter.viewholder.PathViewHolder
 
 
 // One Page
-class PathListRVAdapter : RecyclerView.Adapter<PathViewHolder>() {
+class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCallback()) {
 
     private val pathList: MutableList<PathData> = mutableListOf()
     private lateinit var itemClickListener: OnItemClickListener
@@ -24,6 +25,17 @@ class PathListRVAdapter : RecyclerView.Adapter<PathViewHolder>() {
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int)
         fun onItemLongClick(view: View, position: Int)
+    }
+
+    class PathListDiffCallback: DiffUtil.ItemCallback<PathData>() {
+
+        override fun areItemsTheSame(oldItem: PathData, newItem: PathData): Boolean {
+            return oldItem == newItem || oldItem.fullPath == newItem.fullPath
+        }
+
+        override fun areContentsTheSame(oldItem: PathData, newItem: PathData): Boolean {
+            return oldItem.contentId == newItem.contentId
+        }
     }
 
     companion object {
