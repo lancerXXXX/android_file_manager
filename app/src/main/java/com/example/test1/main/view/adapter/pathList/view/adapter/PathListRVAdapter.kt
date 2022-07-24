@@ -82,7 +82,6 @@ class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCall
         return when (pathList[position]) {
             is FolderItem -> DIRECTORY_TYPE_FOLDER
             is FileItem -> DIRECTORY_TYPE_FILE
-            else -> DIRECTORY_TYPE_FOLDER
         }
     }
 

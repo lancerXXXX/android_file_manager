@@ -1,69 +1,39 @@
 package com.example.test1.main.view.adapter.pathList.view
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.drawable.Drawable
-import android.text.TextPaint
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
-import com.example.test1.R
+import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.test1.databinding.PathListContainerBinding
+import com.example.test1.main.model.FolderItem
+import com.example.test1.main.view.adapter.pathList.view.adapter.PathListRVAdapter
+import com.example.test1.utils.extension.simpleLog
 
 /**
  * TODO: document your custom view class.
  */
-class PathListContainer : View {
+class PathListContainer : LinearLayout {
 
-    private var _exampleString: String? = null // TODO: use a default from R.string...
-    private var _exampleColor: Int = Color.RED // TODO: use a default from R.color...
-    private var _exampleDimension: Float = 0f // TODO: use a default from R.dimen...
+    private lateinit var binding: PathListContainerBinding
+    private val adapter = PathListRVAdapter().apply {
+        this.setOnItemClickListener(object : PathListRVAdapter.OnItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+            }
 
-    private lateinit var textPaint: TextPaint
-    private var textWidth: Float = 0f
-    private var textHeight: Float = 0f
+            override fun onItemLongClick(view: View, position: Int) {
+            }
 
-    /**
-     * The text to draw
-     */
-    var exampleString: String?
-        get() = _exampleString
-        set(value) {
-            _exampleString = value
-            invalidateTextPaintAndMeasurements()
-        }
-
-    /**
-     * The font color
-     */
-    var exampleColor: Int
-        get() = _exampleColor
-        set(value) {
-            _exampleColor = value
-            invalidateTextPaintAndMeasurements()
-        }
-
-    /**
-     * In the example view, this dimension is the font size.
-     */
-    var exampleDimension: Float
-        get() = _exampleDimension
-        set(value) {
-            _exampleDimension = value
-            invalidateTextPaintAndMeasurements()
-        }
-
-    /**
-     * In the example view, this drawable is drawn above the text.
-     */
-    var exampleDrawable: Drawable? = null
+        })
+    }
 
     constructor(context: Context) : super(context) {
-        init(null, 0)
+        init(context)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(attrs, 0)
+        init(context)
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
@@ -71,87 +41,19 @@ class PathListContainer : View {
         attrs,
         defStyle
     ) {
-        init(attrs, defStyle)
+        init(context)
     }
 
-    private fun init(attrs: AttributeSet?, defStyle: Int) {
-        // Load attributes
-        val a = context.obtainStyledAttributes(
-            attrs, R.styleable.PathListContainer, defStyle, 0
+    private fun init(context: Context) {
+        this.simpleLog("[PathListContainer] init")
+        binding = PathListContainerBinding.inflate(LayoutInflater.from(context), this, true)
+        binding.root.layoutManager = LinearLayoutManager(context)
+        binding.root.adapter = adapter
+        val list = listOf<FolderItem>(
+            FolderItem(0, "1", "1"),
+            FolderItem(0, "2", "2")
         )
-
-        _exampleString = a.getString(
-            R.styleable.PathListContainer_exampleString
-        )
-        _exampleColor = a.getColor(
-            R.styleable.PathListContainer_exampleColor,
-            exampleColor
-        )
-        // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
-        // values that should fall on pixel boundaries.
-        _exampleDimension = a.getDimension(
-            R.styleable.PathListContainer_exampleDimension,
-            exampleDimension
-        )
-
-        if (a.hasValue(R.styleable.PathListContainer_exampleDrawable)) {
-            exampleDrawable = a.getDrawable(
-                R.styleable.PathListContainer_exampleDrawable
-            )
-            exampleDrawable?.callback = this
-        }
-
-        a.recycle()
-
-        // Set up a default TextPaint object
-        textPaint = TextPaint().apply {
-            flags = Paint.ANTI_ALIAS_FLAG
-            textAlign = Paint.Align.LEFT
-        }
-
-        // Update TextPaint and text measurements from attributes
-        invalidateTextPaintAndMeasurements()
-    }
-
-    private fun invalidateTextPaintAndMeasurements() {
-        textPaint.let {
-            it.textSize = exampleDimension
-            it.color = exampleColor
-            textWidth = it.measureText(exampleString)
-            textHeight = it.fontMetrics.bottom
-        }
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        val paddingLeft = paddingLeft
-        val paddingTop = paddingTop
-        val paddingRight = paddingRight
-        val paddingBottom = paddingBottom
-
-        val contentWidth = width - paddingLeft - paddingRight
-        val contentHeight = height - paddingTop - paddingBottom
-
-        exampleString?.let {
-            // Draw the text.
-            canvas.drawText(
-                it,
-                paddingLeft + (contentWidth - textWidth) / 2,
-                paddingTop + (contentHeight + textHeight) / 2,
-                textPaint
-            )
-        }
-
-        // Draw the example drawable on top of the text.
-        exampleDrawable?.let {
-            it.setBounds(
-                paddingLeft, paddingTop,
-                paddingLeft + contentWidth, paddingTop + contentHeight
-            )
-            it.draw(canvas)
-        }
+        adapter.setDataSet(list)
+        adapter.notifyDataSetChanged()
     }
 }

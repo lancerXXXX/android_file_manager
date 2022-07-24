@@ -16,10 +16,17 @@
         android:layout_margin="0dp"
         app:cardCornerRadius="5dp" >
 
+        <com.example.test1.main.view.adapter.pathList.view.PathListContainer
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:visibility="visible"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/path_RV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="500dp"
+            android:visibility="gone"
+            >
         </androidx.recyclerview.widget.RecyclerView>
 
     </androidx.cardview.widget.CardView>

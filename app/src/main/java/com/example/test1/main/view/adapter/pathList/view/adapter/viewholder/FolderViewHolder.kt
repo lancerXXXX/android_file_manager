@@ -4,6 +4,7 @@ import com.example.test1.databinding.FolderItemBinding
 import com.example.test1.main.model.FolderItem
 import com.example.test1.main.view.adapter.pathList.view.adapter.PathListRVAdapter
 import com.example.test1.utils.ThemeUtil
+import com.example.test1.utils.extension.simpleLog
 
 class FolderViewHolder(private val binding: FolderItemBinding) : PathViewHolder(binding.root) {
 
@@ -12,6 +13,8 @@ class FolderViewHolder(private val binding: FolderItemBinding) : PathViewHolder(
         selectedPathIndex: Int,
         itemClickListener: PathListRVAdapter.OnItemClickListener
     ) {
+        this.simpleLog("name-${data.pathName}")
+
         val theme =
             if (adapterPosition == selectedPathIndex) ThemeUtil.getFolderSelectedTheme()
             else ThemeUtil.getFolderTheme()
