@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.test1.databinding.PathPageItemBinding
 import com.example.test1.main.model.PageData
 import com.example.test1.main.view.adapter.pagelist.viewholder.PageViewHolder
+import com.example.test1.utils.extension.simpleLog
 
 class PageListRVAdapter : ListAdapter<PageData, PageViewHolder>(FirstLevelDiffCallback() ) {
 
@@ -42,6 +43,7 @@ class PageListRVAdapter : ListAdapter<PageData, PageViewHolder>(FirstLevelDiffCa
     }
 
     override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
+        simpleLog("bind page $position")
         holder.bind(getItem(position), clickListener)
     }
 

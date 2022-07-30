@@ -1,7 +1,7 @@
 package com.example.test1.main.view.adapter.pathList.view.adapter.viewholder
 
 import com.example.test1.databinding.FileItemBinding
-import com.example.test1.main.model.PathData
+import com.example.test1.main.view.adapter.pathList.model.PathData
 import com.example.test1.main.view.adapter.pathList.view.adapter.PathListRVAdapter
 import com.example.test1.utils.ThemeUtil
 

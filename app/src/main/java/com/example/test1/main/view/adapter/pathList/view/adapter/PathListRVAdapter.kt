@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.example.test1.main.model.PathData
+import com.example.test1.main.view.adapter.pathList.model.PathData
 import com.example.test1.databinding.FileItemBinding
 import com.example.test1.databinding.FolderItemBinding
-import com.example.test1.main.model.FileItem
-import com.example.test1.main.model.FolderItem
+import com.example.test1.main.view.adapter.pathList.model.FileItem
+import com.example.test1.main.view.adapter.pathList.model.FolderItem
 import com.example.test1.main.view.adapter.pathList.view.adapter.viewholder.FileViewHolder
 import com.example.test1.main.view.adapter.pathList.view.adapter.viewholder.FolderViewHolder
 import com.example.test1.main.view.adapter.pathList.view.adapter.viewholder.PathViewHolder

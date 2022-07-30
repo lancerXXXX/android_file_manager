@@ -1,5 +1,8 @@
 package com.example.test1.main.model
 
+import com.example.test1.main.view.adapter.pathList.model.FileItem
+import com.example.test1.main.view.adapter.pathList.model.FolderItem
+import com.example.test1.main.view.adapter.pathList.model.PathData
 import com.example.test1.utils.extension.simpleLog
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
