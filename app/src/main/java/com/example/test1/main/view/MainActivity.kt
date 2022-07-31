@@ -67,7 +67,7 @@ class MainActivity : BaseActivity() {
         fun setupViewModel() {
 
             fun setUpLayoutManager() {
-                binding.pathPageRV.layoutManager =
+                binding.pageRV.layoutManager =
                     object : LinearLayoutManager(this) {
                         override fun smoothScrollToPosition(
                             recyclerView: RecyclerView?,
@@ -102,8 +102,8 @@ class MainActivity : BaseActivity() {
                     override fun onFolderClick(clickedPathName: String, clickFromPageNum: Int) {
                         this.simpleLog("onFolderClick")
                         pageListViewModel.onFolderClicked(clickedPathName, clickFromPageNum)
-                        this.simpleLog("adapter == null: ${binding.pathPageRV.adapter == null}")
-                        binding.pathPageRV.adapter?.notifyDataSetChanged()
+                        this.simpleLog("adapter == null: ${binding.pageRV.adapter == null}")
+                        //binding.pageRV.adapter?.notifyDataSetChanged()
                     }
 
                     override fun onFileClick(clickedPathName: String) {
@@ -118,7 +118,7 @@ class MainActivity : BaseActivity() {
                         pageListViewModel.onPathLongClicked()
                     }
                 })
-                binding.pathPageRV.adapter = pathPagesRVAdapter
+                binding.pageRV.adapter = pathPagesRVAdapter
             }
 
             fun setUpDataObserve() {
@@ -130,11 +130,11 @@ class MainActivity : BaseActivity() {
                     lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         pageListViewModel.pageList.collect { newFirstLevelPathList ->
                             this.simpleLog("collect")
-                            binding.pathPageRV.adapter?.apply {
+                            binding.pageRV.adapter?.apply {
                                 (this as PageListRVAdapter).submitList(newFirstLevelPathList)
                             }
                             // let pages scroll to the last page
-                            binding.pathPageRV.apply {
+                            binding.pageRV.apply {
                                 smoothScrollToPosition((adapter?.itemCount ?: 1))
                             }
                         }

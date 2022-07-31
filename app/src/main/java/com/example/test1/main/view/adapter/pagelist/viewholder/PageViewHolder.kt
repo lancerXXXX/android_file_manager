@@ -1,7 +1,6 @@
 package com.example.test1.main.view.adapter.pagelist.viewholder
 
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test1.databinding.PathPageItemBinding
 import com.example.test1.main.view.adapter.pathList.model.FileItem
@@ -17,10 +16,13 @@ class PageViewHolder(private val binding: PathPageItemBinding) : RecyclerView.Vi
     val whichPage get() = adapterPosition
 
     fun bind(page: PageData, clickListener: PageListRVAdapter.OnItemClickListener) {
-        simpleLog("current Page: $whichPage: { ${page.path}, - ${page.pathItems.size} }")
-        binding.pathListContainer.setDependency(page.pathItems,
+        simpleLog("current Page: $whichPage: ${page.path} - ${page.pathItems.size} }")
+        binding.pagePath.text = page.path
+
+        binding.pathListContainer.setDependency(page.path, page.pathItems,
             object : PathListRVAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, position: Int) {
+                    simpleLog("clickItem-$whichPage - $position")
                     page.pathItems.getOrNull(position)?.let { path ->
                         when (path) {
                             is FileItem -> {

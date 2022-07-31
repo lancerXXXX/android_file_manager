@@ -15,13 +15,13 @@
         app:exampleDimension="24sp"
         app:exampleDrawable="@android:drawable/ic_menu_add"
         app:exampleString="Hello, CommonTitleBar"
-        app:layout_constraintBottom_toTopOf="@id/path_page_RV"
+        app:layout_constraintBottom_toTopOf="@id/pageRV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/path_page_RV"
+        android:id="@+id/pageRV"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

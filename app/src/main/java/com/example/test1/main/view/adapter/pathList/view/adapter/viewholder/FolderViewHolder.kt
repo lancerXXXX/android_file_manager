@@ -13,8 +13,6 @@ class FolderViewHolder(private val binding: FolderItemBinding) : PathViewHolder(
         selectedPathIndex: Int,
         itemClickListener: PathListRVAdapter.OnItemClickListener
     ) {
-        this.simpleLog("name-${data.pathName}")
-
         val theme =
             if (adapterPosition == selectedPathIndex) ThemeUtil.getFolderSelectedTheme()
             else ThemeUtil.getFolderTheme()
@@ -30,6 +28,7 @@ class FolderViewHolder(private val binding: FolderItemBinding) : PathViewHolder(
         binding.root.let { cv ->
             cv.setCardBackgroundColor(context.getColor(theme.t3))
             cv.setOnClickListener {
+                simpleLog("onItemClick($adapterPosition)")
                 itemClickListener.onItemClick(it, adapterPosition)
             }
         }

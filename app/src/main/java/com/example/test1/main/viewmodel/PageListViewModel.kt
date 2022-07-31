@@ -72,10 +72,11 @@ class PageListViewModel(application: Application) : AndroidViewModel(application
         }
 
         this.simpleLog("got PageData")
-        _pageList.value = pageData
+        _pageList.value = pageData.toMutableList()
     }
 
     private fun openFileByPath(context: Context, path: String) {
+        simpleLog("openFileByPath: $path")
 
         val file = File(path)
 

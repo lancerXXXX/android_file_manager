@@ -25,10 +25,12 @@ class PageListRVAdapter : ListAdapter<PageData, PageViewHolder>(FirstLevelDiffCa
     class FirstLevelDiffCallback : DiffUtil.ItemCallback<PageData>() {
 
         override fun areItemsTheSame(oldItem: PageData, newItem: PageData): Boolean {
+            return false
             return oldItem == newItem || oldItem.path == newItem.path
         }
 
         override fun areContentsTheSame(oldItem: PageData, newItem: PageData): Boolean {
+            return false
             return oldItem.contentId == newItem.contentId
         }
 
@@ -43,7 +45,6 @@ class PageListRVAdapter : ListAdapter<PageData, PageViewHolder>(FirstLevelDiffCa
     }
 
     override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
-        simpleLog("bind page $position")
         holder.bind(getItem(position), clickListener)
     }
 
