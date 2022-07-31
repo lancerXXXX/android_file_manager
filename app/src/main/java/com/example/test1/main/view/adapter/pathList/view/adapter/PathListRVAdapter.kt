@@ -20,7 +20,7 @@ import com.example.test1.utils.extension.simpleLog
 class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCallback()) {
 
     private lateinit var itemClickListener: OnItemClickListener
-    var selectedPathIndex = -1
+    private var selectedPathIndex = -1
 
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int)
@@ -30,12 +30,10 @@ class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCall
     class PathListDiffCallback: DiffUtil.ItemCallback<PathData>() {
 
         override fun areItemsTheSame(oldItem: PathData, newItem: PathData): Boolean {
-            return false
             return oldItem == newItem || oldItem.fullPath == newItem.fullPath
         }
 
         override fun areContentsTheSame(oldItem: PathData, newItem: PathData): Boolean {
-            return false
             return oldItem.contentId == newItem.contentId
         }
     }
