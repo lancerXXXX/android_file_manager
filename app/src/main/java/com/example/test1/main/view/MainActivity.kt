@@ -143,9 +143,7 @@ class MainActivity : BaseActivity() {
 
             }
 
-            pageListViewModel = ViewModelProvider(this, ViewModelFactory(this.application)).get(
-                PageListViewModel::class.java
-            )
+            pageListViewModel = ViewModelProvider(this, ViewModelFactory(this.application))[PageListViewModel::class.java]
 
             setUpLayoutManager()
             setUpAdapter()
