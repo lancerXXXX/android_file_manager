@@ -15,7 +15,7 @@ data class PageData(
     var selectedIndex: Int = -1
 ) {
 
-    val contentId: Long = pageListContentIdCreator.incrementAndGet().also {
+    val contentId: Long = pageListContentIdCreator.getAndIncrement().also {
         this.simpleLog("PageData: path: $path - uid: $it")
     }
 
@@ -24,8 +24,10 @@ data class PageData(
             return mutableListOf<PathData>().apply {
                 for (file in fileList) {
                     add(
-                        if (file.isDirectory) FolderItem(0, file.name, file.path)
-                        else FileItem(0, file.name, file.path)
+                        if (file.isDirectory)
+                            FolderItem(0, file.name, file.path, false)
+                        else
+                            FileItem(0, file.name, file.path)
                     )
                 }
             }

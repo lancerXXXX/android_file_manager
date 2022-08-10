@@ -20,9 +20,17 @@ import com.example.test1.utils.extension.simpleLog
 class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCallback()) {
 
     private lateinit var itemClickListener: OnItemClickListener
-    private var selectedPathIndex = -1
+
+    private lateinit var innerItemClickListener : InnerOnItemClickListener
+
+    var selectedPathIndex = -1
 
     interface OnItemClickListener {
+        fun onItemClick(view: View, position: Int)
+        fun onItemLongClick(view: View, position: Int)
+    }
+
+    interface InnerOnItemClickListener {
         fun onItemClick(view: View, position: Int)
         fun onItemLongClick(view: View, position: Int)
     }
@@ -59,12 +67,12 @@ class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCall
         when (holder) {
             is FileViewHolder -> {
                 (getItem(position) as? FileItem)?.let { fileItem ->
-                    holder.bind(fileItem, itemClickListener)
+                    holder.bind(fileItem, innerItemClickListener)
                 }
             }
             is FolderViewHolder -> {
                 (getItem(position) as? FolderItem)?.let { folderItem ->
-                    holder.bind(folderItem , selectedPathIndex, itemClickListener)
+                    holder.bind(folderItem , selectedPathIndex, innerItemClickListener)
                 }
             }
         }
@@ -77,7 +85,8 @@ class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCall
         }
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener) {
+    fun setOnItemClickListener(listener: OnItemClickListener, param: InnerOnItemClickListener) {
         this.itemClickListener = listener
+        this.innerItemClickListener = param
     }
 }

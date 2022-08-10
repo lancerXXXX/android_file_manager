@@ -7,12 +7,12 @@ import com.example.test1.utils.ThemeUtil
 
 class FileViewHolder(private val binding: FileItemBinding): PathViewHolder(binding.root) {
 
-    fun bind(data: PathData, itemClickListener: PathListRVAdapter.OnItemClickListener) {
+    fun bind(data: PathData, itemClickListener: PathListRVAdapter.InnerOnItemClickListener) {
         val theme = ThemeUtil.getFileTheme()
         // 1. icon
         binding.fileIcon.background = context.getDrawable(theme.t1)
         // 2. name
-        binding.fileName?.let { tv ->
+        binding.fileName.let { tv ->
             tv.setTextColor(context.getColor(theme.t2))
             tv.text = data.pathName
         }

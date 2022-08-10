@@ -11,16 +11,19 @@ class FolderViewHolder(private val binding: FolderItemBinding) : PathViewHolder(
     fun bind(
         data: FolderItem,
         selectedPathIndex: Int,
-        itemClickListener: PathListRVAdapter.OnItemClickListener
+        itemClickListener: PathListRVAdapter.InnerOnItemClickListener
     ) {
+        simpleLog("${data.pathName} - $adapterPosition - $selectedPathIndex")
         val theme =
-            if (adapterPosition == selectedPathIndex) ThemeUtil.getFolderSelectedTheme()
-            else ThemeUtil.getFolderTheme()
+            if (data.isSelected)
+                ThemeUtil.getFolderSelectedTheme()
+            else
+                ThemeUtil.getFolderTheme()
 
         // 1. icon
         binding.pathIcon.background = context.getDrawable(theme.t1)
         // 2. name
-        binding.folderName?.let { tv ->
+        binding.folderName.let { tv ->
             tv.text = data.pathName
             tv.setTextColor(context.getColor(theme.t2))
         }

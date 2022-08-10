@@ -12,14 +12,13 @@ import com.example.test1.utils.extension.simpleLog
 
 class PageViewHolder(private val binding: PathPageItemBinding) : RecyclerView.ViewHolder(binding.root) {
     
-    private val context = binding.root.context
     val whichPage get() = adapterPosition
 
     fun bind(page: PageData, clickListener: PageListRVAdapter.OnItemClickListener) {
         simpleLog("current Page: $whichPage: ${page.path} - ${page.pathItems.size} }")
         binding.pagePath.text = page.path
 
-        binding.pathListContainer.setDependency(page.path, page.pathItems,
+        binding.pathListContainer.setDependency(page,
             object : PathListRVAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, position: Int) {
                     simpleLog("clickItem-$whichPage - $position")

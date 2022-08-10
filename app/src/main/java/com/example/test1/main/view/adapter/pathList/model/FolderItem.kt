@@ -1,5 +1,10 @@
 package com.example.test1.main.view.adapter.pathList.model
 
-class FolderItem(contentId: Long, pathName: String, filePath: String) : PathData(contentId, pathName, filePath) {
+data class FolderItem(
+    override val contentId: Long,
+    override val pathName: String,
+    override val fullPath: String,
+    val isSelected: Boolean
+) : PathData(contentId, pathName, fullPath) {
 
 }
