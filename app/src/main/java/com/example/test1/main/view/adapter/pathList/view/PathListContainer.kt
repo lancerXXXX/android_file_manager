@@ -67,20 +67,21 @@ class PathListContainer : LinearLayout{
         adapter.setOnItemClickListener(clickListener, object :
             PathListRVAdapter.InnerOnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val temp = pathList1.pathItems[position]
-                when(temp) {
+                when(val temp = pathList1.pathItems[position]) {
                     is FileItem -> {
 
                     }
                     is FolderItem -> {
+                        // set new clicked folder isSelected
                         pathList1.pathItems[position] = temp.copy(
-                            contentId = pathListContentIdCreator.getAndIncrement(),
+                            contentId = pathListContentIdCreator.incrementAndGet(),
                             isSelected = true
                         )
+                        // set original selected folder  not selected
                         when (val original = pathList1.pathItems.getOrNull(adapter.selectedPathIndex)) {
                             is FolderItem -> {
                                 pathList1.pathItems[adapter.selectedPathIndex] = original.copy(
-                                    contentId = pathListContentIdCreator.getAndIncrement(),
+                                    contentId = pathListContentIdCreator.incrementAndGet(),
                                     isSelected = false
                                 )
                             }
