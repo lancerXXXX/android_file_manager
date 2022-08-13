@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test1.databinding.PathListContainerBinding
 import com.example.test1.main.model.PageData
@@ -14,22 +13,67 @@ import com.example.test1.main.view.adapter.pathList.model.FolderItem
 import com.example.test1.main.view.adapter.pathList.view.adapter.PathListRVAdapter
 import com.example.test1.main.view.adapter.pathList.viewmodel.PathListViewModel
 import com.example.test1.utils.extension.simpleLog
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import java.util.concurrent.atomic.AtomicLong
 
 /**
  * TODO: document your custom view class.
  */
-class PathListContainer : LinearLayout{
+class PathListContainer : LinearLayout {
     /* ================= view =================== */
     private lateinit var binding: PathListContainerBinding
-    /* ================= viewModel ============== */
-    private lateinit var viewModel: PathListViewModel
 
-    private val pathListContentIdCreator = AtomicLong()
+    /* ================= viewModel ============== */
+    private var viewModel: PathListViewModel = PathListViewModel()
+
     /* ================= data =================== */
     private var parentPath: String = ""
+
     /* ================= util =================== */
-    private lateinit var adapter: PathListRVAdapter
+    private val pathListContentIdCreator = AtomicLong()
+    private var clickListener: PathListRVAdapter.OnItemClickListener? = null
+    private var innerOnItemClickListener = object :
+        PathListRVAdapter.InnerOnItemClickListener {
+        override fun onItemClick(view: View, position: Int) {
+            when (val temp = viewModel.pageData.value.pathItems[position]) {
+                is FileItem -> {
+
+                }
+                is FolderItem -> {
+                    // set new clicked folder isSelected
+                    viewModel.pageData.value.pathItems[position] = temp.copy(
+                        contentId = pathListContentIdCreator.incrementAndGet(),
+                        isSelected = true
+                    )
+                    // set original selected folder  not selected
+                    when (val original =
+                        viewModel.pageData.value.pathItems.getOrNull(adapter.selectedPathIndex)) {
+                        is FolderItem -> {
+                            viewModel.pageData.value.pathItems[adapter.selectedPathIndex] =
+                                original.copy(
+                                    contentId = pathListContentIdCreator.incrementAndGet(),
+                                    isSelected = false
+                                )
+                        }
+                        else -> {}
+                    }
+                    adapter.submitList(viewModel.pageData.value.pathItems.toMutableList())
+                }
+            }
+            adapter.selectedPathIndex = position
+            clickListener?.onItemClick(view, position)
+        }
+
+        override fun onItemLongClick(view: View, position: Int) {
+            clickListener?.onItemLongClick(view, position)
+        }
+    }
+    private var adapter: PathListRVAdapter = PathListRVAdapter().also { adapter ->
+        adapter.setOnItemClickListener(innerOnItemClickListener)
+        adapter.selectedPathIndex = viewModel.pageData.value.selectedIndex
+    }
+    private val mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     constructor(context: Context) : super(context) {
         init(context)
@@ -47,67 +91,42 @@ class PathListContainer : LinearLayout{
         init(context)
     }
 
-    override fun onAttachedToWindow() {
-        viewModel = ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[PathListViewModel::class.java]
-        super.onAttachedToWindow()
-    }
-
     private fun init(context: Context) {
         simpleLog("init[$this]")
+        initVariable()
         initRVList()
-        pathListContentIdCreator.set(0)
+        initObserver()
     }
 
     fun setDependency(
-        pathList1: PageData,
+        pageData: PageData,
         clickListener: PathListRVAdapter.OnItemClickListener
     ) {
-        simpleLog("setDependency-$pathList1")
-        this.parentPath = pathList1.path
-        adapter.setOnItemClickListener(clickListener, object :
-            PathListRVAdapter.InnerOnItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
-                when(val temp = pathList1.pathItems[position]) {
-                    is FileItem -> {
+        simpleLog("setDependency-$pageData")
+        this.parentPath = pageData.path
+        this.clickListener = clickListener
+        viewModel.setDependency(pageData)
+    }
 
-                    }
-                    is FolderItem -> {
-                        // set new clicked folder isSelected
-                        pathList1.pathItems[position] = temp.copy(
-                            contentId = pathListContentIdCreator.incrementAndGet(),
-                            isSelected = true
-                        )
-                        // set original selected folder  not selected
-                        when (val original = pathList1.pathItems.getOrNull(adapter.selectedPathIndex)) {
-                            is FolderItem -> {
-                                pathList1.pathItems[adapter.selectedPathIndex] = original.copy(
-                                    contentId = pathListContentIdCreator.incrementAndGet(),
-                                    isSelected = false
-                                )
-                            }
-                            else -> { }
-                        }
-                        adapter.submitList(pathList1.pathItems.toMutableList())
-                    }
-                }
-                adapter.selectedPathIndex = position
-                clickListener.onItemClick(view, position)
-            }
-
-            override fun onItemLongClick(view: View, position: Int) {
-                clickListener.onItemLongClick(view, position)
-            }
-        })
-        adapter.selectedPathIndex = pathList1.selectedIndex
-        adapter.submitList(pathList1.pathItems.toMutableList())
+    private fun initVariable() {
+        binding = PathListContainerBinding.inflate(LayoutInflater.from(context), this, true)
+        pathListContentIdCreator.set(0)
     }
 
     private fun initRVList() {
         simpleLog("initRVList")
-        binding = PathListContainerBinding.inflate(LayoutInflater.from(context), this, true)
-        binding.root.layoutManager = LinearLayoutManager(context)
-        adapter = PathListRVAdapter()
-        binding.root.adapter = adapter
+        binding.root.let { rv ->
+            rv.layoutManager = LinearLayoutManager(context)
+            rv.adapter = adapter
+        }
+    }
+
+    private fun initObserver() {
+        mainScope.launch {
+            viewModel.pageData.collect {
+                adapter.submitList(it.pathItems.toMutableList())
+            }
+        }
     }
 
 }

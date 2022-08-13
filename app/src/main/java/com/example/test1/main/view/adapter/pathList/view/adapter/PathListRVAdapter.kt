@@ -19,8 +19,6 @@ import com.example.test1.utils.extension.simpleLog
 // One Page
 class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCallback()) {
 
-    private lateinit var itemClickListener: OnItemClickListener
-
     private lateinit var innerItemClickListener : InnerOnItemClickListener
 
     var selectedPathIndex = -1
@@ -85,8 +83,7 @@ class PathListRVAdapter : ListAdapter<PathData, PathViewHolder>(PathListDiffCall
         }
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener, param: InnerOnItemClickListener) {
-        this.itemClickListener = listener
+    fun setOnItemClickListener(param: InnerOnItemClickListener) {
         this.innerItemClickListener = param
     }
 }
