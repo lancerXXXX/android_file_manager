@@ -20,8 +20,4 @@ class PathListViewModel: ViewModel() {
         _pageData.value = pageData.copy()
     }
 
-    fun copy():  PathListViewModel{
-        return PathListViewModel()
-    }
-
 }

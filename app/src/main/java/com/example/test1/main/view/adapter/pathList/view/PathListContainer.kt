@@ -119,6 +119,7 @@ class PathListContainer : LinearLayout {
             rv.layoutManager = LinearLayoutManager(context)
             rv.adapter = adapter
         }
+        adapter.submitList(emptyList())
     }
 
     private fun initObserver() {
